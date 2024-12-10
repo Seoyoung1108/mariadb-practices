@@ -10,19 +10,24 @@ select concat(first_name, ' ', last_name) as '전체 이름' from employees
 -- 문제2. 
 -- 전체 직원의 다음 정보를 조회하세요. 가장 선임부터 출력이 되도록 하세요.
 -- 출력은 이름, 성별, 입사일 순서이고 "이름", "성별", "입사일"로 컬럼 이름을 대체해 보세요.
-select first_name as '이름',
+select concat(first_name, ' ', last_name) as '이름',
 	gender as '성별',
     hire_date as '입사일' from employees
 	order by hire_date asc;
 
 -- 문제3.
 -- 여직원과 남직원은 각 각 몇 명이나 있나요?(각각 쿼리 만들어서 각각 출력 또는 집계로 한 번에 해결) -> 일단 각자 출력
-select count(emp_no) as '여직원 수' from employees
-	where gender='F';
+-- select count(emp_no) as '여직원 수' from employees
+-- where gender='F';
 
-select count(emp_no) as '남직원 수' from employees
-	where gender='M';
+-- select count(emp_no) as '남직원 수' from employees
+-- where gender='M';
 
+select if(gender='M','남자','여자') as '성별',
+	count(*) as '수'
+    from employees
+    group by gender;
+    
 -- 문제4.
 -- 현재(to_date='9999-01-01'), 근무하고 있는 직원 수는 몇 명입니까? (salaries 테이블을 사용) 
 select count(emp_no) as '근무하고 있는 직원 수' from salaries
@@ -61,6 +66,6 @@ select count(emp_no) as 'Engineer 수' from titles
    
 -- 문제11
 -- 사번이 13250(Zeydy)인 직원의 직책 변경 상황을 시간순으로 출력해보세요.
-select title from titles
+select title, from_date, to_date from titles
 	where emp_no=13250
     order by from_date asc;
