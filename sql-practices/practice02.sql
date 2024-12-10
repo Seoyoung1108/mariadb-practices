@@ -33,6 +33,7 @@ select max(salary) as '최고 연봉',
 
 -- 문제6.
 -- 현재, 근무중인 사원 중 나이가 제일 어린 사원과 제일 많은 사원의 나이를 각각 출력하세요.
-select cast(2024-substring(employees.birth_date, 1,4) as UNSIGNED)
-	from employees, salaries
-	where salaries.to_date='9999-01-01';
+select date_format(curdate(),'%Y') - date_format(max(birth_date),'%Y') as '제일 어린 사원',
+	date_format(curdate(),'%Y') - date_format(min(birth_date),'%Y') as '제일 나이가 많은 사원'
+	from employees a, salaries b
+	where a.emp_no=b.emp_no and b.to_date='9999-01-01';
