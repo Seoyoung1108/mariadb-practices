@@ -13,7 +13,8 @@ order by s.salary desc;
 select e.emp_no as '사번', concat(e.first_name, ' ', e.last_name) as '이름', t.title as '직책'
 from employees e, titles t
 where e.emp_no=t.emp_no
-and t.to_date='9999-01-01';
+and t.to_date='9999-01-01'
+order by concat(e.first_name, ' ', e.last_name) asc;
 
 -- 문제3.
 -- 전체 사원의 사번, 이름, 현재 부서를 이름 순서로 출력하세요.
@@ -21,7 +22,8 @@ select e.emp_no as '사번', concat(e.first_name, ' ', e.last_name) as '이름',
 from employees e, dept_emp de, departments d
 where e.emp_no=de.emp_no
 and de.dept_no=d.dept_no
-and de.to_date='9999-01-01';
+and de.to_date='9999-01-01'
+order by concat(e.first_name, ' ', e.last_name) asc;
 
 -- 문제4.
 -- 현재 근무중인 전체 사원의 사번, 이름, 연봉, 직책, 부서를 모두 이름 순서로 출력합니다.
@@ -52,8 +54,6 @@ from employees e, dept_emp de, departments d, titles t
 where e.emp_no=t.emp_no
 and e.emp_no=de.emp_no
 and de.dept_no=d.dept_no
-and t.to_date='9999-01-01'
-and de.to_date='9999-01-01'
 and e.last_name like 'S%';
 
 -- 문제7.
