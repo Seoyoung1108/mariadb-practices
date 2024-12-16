@@ -1,7 +1,11 @@
 package bookshop.dao;
 
-import bookmall.vo1.BookVo;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 import bookshop.vo.AuthorVo;
+import bookshop.vo.BookVo;
 
 public class BookDaoTest {
 	private static AuthorDao authorDao = new AuthorDao();
@@ -11,7 +15,7 @@ public class BookDaoTest {
 	@BeforeAll
 	public static void setup() {
 		mockAuthorVo.setName("칼세이건");
-		authorDao.insert(mocckAuthorVo);
+		authorDao.insert(mockAuthorVo);
 	}
 	
 	@Test
@@ -25,7 +29,7 @@ public class BookDaoTest {
 	
 	@AfterAll
 	public static void cleanup() {
-		authorDao.deleteById(mockAuthorVo.getId());
 		bookDao.deleteAll();
+		authorDao.deleteById(mockAuthorVo.getId());
 	}
 }

@@ -13,18 +13,14 @@ public class AuthorDaoTest {
 	
 	@Test
 	public void insertTest() {
-		AuthorVo vo = new AuthorVo();
 		vo.setName("칼세이건");
-		
 		dao.insert(vo);
 		
 		assertNotNull(vo.getId());
-		
-		
 	}
 	
 	@AfterAll
-	public static void deleteByIdTest() {
+	public static void cleanup() {
 		dao.deleteById(vo.getId());
 	}
 }
