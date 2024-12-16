@@ -51,3 +51,5 @@ delete from orders_book;
 select ob.quantity, ob.price, ob.book_no, ob.orders_no, o.user_no, b.title from orders_book ob, orders o, book b
 where ob.book_no = b.no and ob.orders_no = o.no and ob.orders_no = ? and o.user_no = ?
 order by ob.book_no asc;
+
+select no, number, payment, shipping, status, user_no from orders where no = 1234567 and user_no = 63;
