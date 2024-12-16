@@ -1,4 +1,4 @@
-package bookmall.dao1;
+package bookmall.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,11 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import bookmall.vo1.UserVo;
+import bookmall.vo1.CategoryVo;
 
-public class UserDao {
-	public List<UserVo> findAll() {
-		List<UserVo> result = new ArrayList<>();
+public class CategoryDao {
+	public List<CategoryVo> findAll() {
+		List<CategoryVo> result = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs=null;
@@ -21,7 +21,7 @@ public class UserDao {
 			conn = getConnection();
 			
 			// 3. Statement 준비하기
-			String sql = "select no, name, email, password, phone from user";
+			String sql = "select no, name from category";
 			pstmt = conn.prepareStatement(sql);
 			
 			// 5. SQL 실행
@@ -31,16 +31,10 @@ public class UserDao {
 			while(rs.next()) {
 				int no = rs.getInt(1);
 				String name = rs.getString(2);
-				String email = rs.getString(3);
-				String password = rs.getString(4);
-				String phonenumber = rs.getString(5);
 				
-				UserVo vo = new UserVo();
+				CategoryVo vo = new CategoryVo();
 				vo.setNo(no);
 				vo.setName(name);
-				vo.setEmail(email);
-				vo.setPassword(password);
-				vo.setPhonenumber(phonenumber);
 				result.add(vo);
 			}
 			
@@ -72,7 +66,7 @@ public class UserDao {
 			conn = getConnection();
 			
 			// 3. Statement 준비하기
-			String sql = "select count(*) from user";
+			String sql = "select count(*) from category";
 			pstmt = conn.prepareStatement(sql);
 			
 			// 5. SQL 실행
@@ -101,40 +95,39 @@ public class UserDao {
 		return result;
 	}
 	
-	public Boolean insert(UserVo vo) {
+	public Boolean insert(CategoryVo vo) {	
 		boolean result = false;
 		Connection conn = null;
-		PreparedStatement pstmt = null;
+		PreparedStatement pstmt =  null;
 		
 		try {
 			conn = getConnection();
 			
 			// 3. Statement 준비하기
-			String sql = "insert into user values (null, ?, ?, ?, ?)";
+			String sql = "insert into category values (null, ?)";
 			pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 			
-			// 4. parameter binding
+			// 4. Parameter binding
 			pstmt.setString(1, vo.getName());
-			pstmt.setString(2, vo.getEmail());
-			pstmt.setString(3, vo.getPassword());
-			pstmt.setString(4, vo.getPhonenumber());
+
 			
 			// 5. SQL 실행
-			int count = pstmt.executeUpdate(); // 데이터 변경
+			int count = pstmt.executeUpdate();
 			
 			result = count == 1;
 			ResultSet rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
                 vo.setNo(rs.getInt(1));
             }
+			
 		} catch (SQLException e) {
-			System.out.println("error:" + e);
+			System.out.println("error: " + e);
 		} finally {
 			try {
-				if(pstmt != null) {
+				if (pstmt != null) {
 					pstmt.close();
 				}
-				if(conn != null) {
+				if (conn != null) {
 					conn.close();
 				}
 			} catch (SQLException e) {
@@ -143,6 +136,7 @@ public class UserDao {
 		}
 		
 		return result;
+		
 	}
 	
 	public Boolean deleteByNo(int no) {
@@ -154,7 +148,7 @@ public class UserDao {
 			conn = getConnection();
 			
 			// 3. Statement 준비하기
-			String sql = "delete from user where no = ?";
+			String sql = "delete from category where no = ?";
 			pstmt = conn.prepareStatement(sql);
 			
 			// 4. parameter binding
@@ -199,5 +193,4 @@ public class UserDao {
 		
 		return conn;
 	}
-
 }

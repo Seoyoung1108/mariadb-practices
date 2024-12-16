@@ -1,4 +1,4 @@
-package bookmall.dao1;
+package bookmall.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

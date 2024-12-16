@@ -21,7 +21,7 @@ public class BookDao {
 			conn = getConnection();
 			
 			// 3. Statement 준비하기
-			String sql = "select no, title, price, category_no from book order by no desc";
+			String sql = "select no, title, price, category_no from book";
 			pstmt = conn.prepareStatement(sql);
 			
 			// 5. SQL 실행

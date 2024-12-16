@@ -39,4 +39,6 @@ public class BookShop {
 			books[i].print();
 		}
 	}
+	
+	// 슬랙ㄴ
 }

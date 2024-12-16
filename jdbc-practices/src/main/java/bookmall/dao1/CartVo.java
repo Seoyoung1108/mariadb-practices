@@ -1,4 +1,4 @@
-package bookmall.vo1;
+package bookmall.dao1;
 
 public class CartVo {
 	// primary X

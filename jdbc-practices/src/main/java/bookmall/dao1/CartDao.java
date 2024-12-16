@@ -8,11 +8,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import bookmall.vo1.UserVo;
+import bookmall.vo1.CartVo;
 
-public class UserDao {
-	public List<UserVo> findAll() {
-		List<UserVo> result = new ArrayList<>();
+public class CartDao {
+	
+	public List<CartVo> findByUserNo(int user_no) {
+		List<CartVo> result = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs=null;
@@ -21,26 +22,30 @@ public class UserDao {
 			conn = getConnection();
 			
 			// 3. Statement 준비하기
-			String sql = "select no, name, email, password, phone from user";
+			String sql = "select c.quantity, c.user_no, c.book_no, b.title"
+					+ " from cart c, book b"
+					+ " where c.book_no = b.no and c.user_no = ?"
+					+ " order by c.book_no asc";
 			pstmt = conn.prepareStatement(sql);
+			
+			// 4. parameter binding
+			pstmt.setInt(1, user_no);
 			
 			// 5. SQL 실행
 			rs=pstmt.executeQuery();
 			
 			// 6. 결과 처리
 			while(rs.next()) {
-				int no = rs.getInt(1);
-				String name = rs.getString(2);
-				String email = rs.getString(3);
-				String password = rs.getString(4);
-				String phonenumber = rs.getString(5);
+				int quantity = rs.getInt(1);
+				// int user_no = rs.getInt(2);
+				int book_no = rs.getInt(3);
+				String book_title = rs.getString(4);
 				
-				UserVo vo = new UserVo();
-				vo.setNo(no);
-				vo.setName(name);
-				vo.setEmail(email);
-				vo.setPassword(password);
-				vo.setPhonenumber(phonenumber);
+				CartVo vo = new CartVo();
+				vo.setQuantity(quantity);
+				vo.setUserNo(user_no);
+				vo.setBookNo(book_no);
+				vo.setBookTitle(book_title);
 				result.add(vo);
 			}
 			
@@ -72,7 +77,7 @@ public class UserDao {
 			conn = getConnection();
 			
 			// 3. Statement 준비하기
-			String sql = "select count(*) from user";
+			String sql = "select count(*) from cart";
 			pstmt = conn.prepareStatement(sql);
 			
 			// 5. SQL 실행
@@ -101,7 +106,7 @@ public class UserDao {
 		return result;
 	}
 	
-	public Boolean insert(UserVo vo) {
+	public Boolean insert(CartVo vo) {
 		boolean result = false;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -110,23 +115,18 @@ public class UserDao {
 			conn = getConnection();
 			
 			// 3. Statement 준비하기
-			String sql = "insert into user values (null, ?, ?, ?, ?)";
-			pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+			String sql = "insert into cart values (?, ?, ?)";
+			pstmt = conn.prepareStatement(sql);
 			
 			// 4. parameter binding
-			pstmt.setString(1, vo.getName());
-			pstmt.setString(2, vo.getEmail());
-			pstmt.setString(3, vo.getPassword());
-			pstmt.setString(4, vo.getPhonenumber());
-			
+			pstmt.setInt(1, vo.getQuantity());
+			pstmt.setInt(2, vo.getUserNo());
+			pstmt.setInt(3, vo.getBookNo());
+
 			// 5. SQL 실행
 			int count = pstmt.executeUpdate(); // 데이터 변경
 			
 			result = count == 1;
-			ResultSet rs = pstmt.getGeneratedKeys();
-            if (rs.next()) {
-                vo.setNo(rs.getInt(1));
-            }
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		} finally {
@@ -145,7 +145,7 @@ public class UserDao {
 		return result;
 	}
 	
-	public Boolean deleteByNo(int no) {
+	public Boolean deleteByUserNoAndBookNo(int user_no, int book_no) {
 		boolean result = false;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -154,11 +154,12 @@ public class UserDao {
 			conn = getConnection();
 			
 			// 3. Statement 준비하기
-			String sql = "delete from user where no = ?";
+			String sql = "delete from cart where user_no = ? and book_no = ?";
 			pstmt = conn.prepareStatement(sql);
 			
 			// 4. parameter binding
-			pstmt.setInt(1, no);
+			pstmt.setInt(1, user_no);
+			pstmt.setInt(2, book_no);
 			
 			// 5. SQL 실행
 			int count = pstmt.executeUpdate(); // 데이터 변경
@@ -181,6 +182,7 @@ public class UserDao {
 		
 		return result;
 	}
+	
 	
 	private Connection getConnection() throws SQLException {
 		Connection conn = null;
@@ -199,5 +201,4 @@ public class UserDao {
 		
 		return conn;
 	}
-
 }

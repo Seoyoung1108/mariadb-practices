@@ -1,4 +1,4 @@
-package bookmall.vo1;
+package bookmall.vo;
 
 public class BookVo {
 	private int no;

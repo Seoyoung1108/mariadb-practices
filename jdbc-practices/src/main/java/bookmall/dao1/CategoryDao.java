@@ -21,7 +21,7 @@ public class CategoryDao {
 			conn = getConnection();
 			
 			// 3. Statement 준비하기
-			String sql = "select no, name from category order by no desc";
+			String sql = "select no, name from category";
 			pstmt = conn.prepareStatement(sql);
 			
 			// 5. SQL 실행

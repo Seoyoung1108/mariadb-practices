@@ -1,4 +1,4 @@
-package bookmall.dao1;
+package bookmall.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,11 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import bookmall.vo1.UserVo;
+import bookmall.vo1.BookVo;
 
-public class UserDao {
-	public List<UserVo> findAll() {
-		List<UserVo> result = new ArrayList<>();
+public class BookDao {
+	public List<BookVo> findAll() {
+		List<BookVo> result = new ArrayList<>();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs=null;
@@ -21,7 +21,7 @@ public class UserDao {
 			conn = getConnection();
 			
 			// 3. Statement 준비하기
-			String sql = "select no, name, email, password, phone from user";
+			String sql = "select no, title, price, category_no from book";
 			pstmt = conn.prepareStatement(sql);
 			
 			// 5. SQL 실행
@@ -30,17 +30,15 @@ public class UserDao {
 			// 6. 결과 처리
 			while(rs.next()) {
 				int no = rs.getInt(1);
-				String name = rs.getString(2);
-				String email = rs.getString(3);
-				String password = rs.getString(4);
-				String phonenumber = rs.getString(5);
+				String title = rs.getString(2);
+				int price = rs.getInt(3);
+				int category_no = rs.getInt(4);
 				
-				UserVo vo = new UserVo();
+				BookVo vo = new BookVo();
 				vo.setNo(no);
-				vo.setName(name);
-				vo.setEmail(email);
-				vo.setPassword(password);
-				vo.setPhonenumber(phonenumber);
+				vo.setTitle(title);
+				vo.setPrice(price);
+				vo.setCategoryNo(category_no);
 				result.add(vo);
 			}
 			
@@ -72,7 +70,7 @@ public class UserDao {
 			conn = getConnection();
 			
 			// 3. Statement 준비하기
-			String sql = "select count(*) from user";
+			String sql = "select count(*) from book";
 			pstmt = conn.prepareStatement(sql);
 			
 			// 5. SQL 실행
@@ -101,7 +99,7 @@ public class UserDao {
 		return result;
 	}
 	
-	public Boolean insert(UserVo vo) {
+	public Boolean insert(BookVo vo) {
 		boolean result = false;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -110,15 +108,14 @@ public class UserDao {
 			conn = getConnection();
 			
 			// 3. Statement 준비하기
-			String sql = "insert into user values (null, ?, ?, ?, ?)";
+			String sql = "insert into book values (null, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 			
 			// 4. parameter binding
-			pstmt.setString(1, vo.getName());
-			pstmt.setString(2, vo.getEmail());
-			pstmt.setString(3, vo.getPassword());
-			pstmt.setString(4, vo.getPhonenumber());
-			
+			pstmt.setString(1, vo.getTitle());
+			pstmt.setInt(2, vo.getPrice());
+			pstmt.setInt(3, vo.getCategoryNo());
+
 			// 5. SQL 실행
 			int count = pstmt.executeUpdate(); // 데이터 변경
 			
@@ -154,7 +151,7 @@ public class UserDao {
 			conn = getConnection();
 			
 			// 3. Statement 준비하기
-			String sql = "delete from user where no = ?";
+			String sql = "delete from book where no = ?";
 			pstmt = conn.prepareStatement(sql);
 			
 			// 4. parameter binding
@@ -182,6 +179,7 @@ public class UserDao {
 		return result;
 	}
 	
+	
 	private Connection getConnection() throws SQLException {
 		Connection conn = null;
 		
@@ -199,5 +197,4 @@ public class UserDao {
 		
 		return conn;
 	}
-
 }
