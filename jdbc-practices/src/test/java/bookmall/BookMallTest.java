@@ -189,5 +189,4 @@ public class BookMallTest {
 		userDao.deleteByNo(mockUserVo01.getNo());
 		userDao.deleteByNo(mockUserVo02.getNo());
 	}
-
 }

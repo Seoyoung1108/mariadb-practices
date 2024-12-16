@@ -8,10 +8,68 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import bookmall.vo1.OrderBookVo;
-import bookmall.vo1.OrderVo;
+import bookmall.vo.OrderBookVo;
+import bookmall.vo.OrderVo;
 
 public class OrderDao {
+	
+	public OrderVo findByNoAndUserNo(Long no, int user_no) {
+		// List<OrderVo> result = new ArrayList<>();
+		OrderVo result = new OrderVo();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs=null;
+		
+		try {
+			conn = getConnection();
+			
+			// 3. Statement 준비하기
+			String sql = "select no, number, payment, shipping, status, user_no from orders where no = ? and user_no = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			// 4. parameter binding
+			int ino = no.intValue();
+			pstmt.setInt(1, ino);
+			pstmt.setInt(2, user_no);
+			
+			// 5. SQL 실행
+			rs=pstmt.executeQuery();
+			
+			// 6. 결과 처리
+			while(rs.next()) {
+				// int no = rs.getInt(1);
+				String number = rs.getString(2);
+				int payment = rs.getInt(3);
+				String shipping = rs.getString(4);
+				String status = rs.getString(5);
+				// int user_no = rs.getInt(6);
+				
+				result.setNo(ino);
+				result.setNumber(number);
+				result.setPayment(payment);
+				result.setShipping(shipping);
+				result.setStatus(status);
+				result.setUserNo(user_no);
+				return result;
+				//result.add(vo);
+			}
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		} finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return null;
+	}
 	
 	public OrderVo findByNoAndUserNo(int no, int user_no) {
 		// List<OrderVo> result = new ArrayList<>();
@@ -49,6 +107,7 @@ public class OrderDao {
 				result.setShipping(shipping);
 				result.setStatus(status);
 				result.setUserNo(user_no);
+				
 				return result;
 				//result.add(vo);
 			}
@@ -67,7 +126,7 @@ public class OrderDao {
 			}
 		}
 		
-		return result;
+		return null;
 	}
 	
 	public List<OrderBookVo> findBooksByNoAndUserNo(int orders_no, int user_no) {

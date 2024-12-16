@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import bookmall.vo1.UserVo;
+import bookmall.vo.UserVo;
 
 public class UserDao {
 	public List<UserVo> findAll() {
